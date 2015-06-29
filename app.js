@@ -2,7 +2,7 @@
 
   todomvc.controller('TodoCtrl', function TodoCtrl($scope, $firebaseArray) {
 
-    var fireRef = new Firebase('https://coderwall-todo.firebaseio.com/');
+    var fireRef = new Firebase('https://YOUR_FIREBASE_HERE.firebaseio.com/');
     $scope.todos = $firebaseArray(fireRef);
     $scope.newTodo = '';
     $scope.editedTodo = null;
