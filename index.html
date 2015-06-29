@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="todomvc">
   <head>
     <meta charset="utf-8">
     <title>To Do List</title>
+    <link rel="stylesheet" href="bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="firebase.js"></script>
+    <script type="text/javascript" src="angularfire.min.js"></script>
+    <link rel="stylesheet" href="style.css" media="screen" title="no title" charset="utf-8">
+    <style>
+      [ng-cloak] {
+        display: none;
+      }
+    </style>
   </head>
   <body>
 
+    <div class='container' ng-controller="TodoCtrl">
+    <section class='row'>
+        <header>
+            <h1 class='text-center'>What do you have to do?</h1>
+            <form ng-submit="addTodo()">
+                <input class='form-control' placeholder="What needs to be done?" ng-model="newTodo" autofocus>
+            </form>
+        </header>
+
+        <section ng-show="totalCount" ng-cloak>
+					<!-- Mark all todos as complete -->
+					<input type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
+					<label for="toggle-all">Mark all as complete</label>
+
+            <h3>All things todo</h3>
+            <p>Double-click to edit a todo</p>
+            <div class="list-group">
+
+              <!-- give this div class="editing" only when editedTodo is true -->
+              <div ng-repeat="todo in todos" class="list-group-item" ng-class="{editing: todo == editedTodo}">
+
+                <!-- the todo item -->
+                <!-- only show if editedTodo is false -->
+                <div class="view" ng-if='todo !== editedTodo'>
+                  <input type="checkbox" ng-model="todo.completed" ng-change="todos.$save(todo)">
+
+                  <!--
+                  if todo is done, strikethrough text
+                  if todo is not done yet, normal text
+                  -->
+                  <label ng-dblclick="editTodo(todo)" ng-if='todo.completed' ng-style="{'text-decoration': 'line-through'}">{{todo.title}}</label>
+                  <label ng-dblclick="editTodo(todo)" ng-if='!todo.completed' ng-style="{'text-decoration': 'none'}">{{todo.title}}</label>
+
+                  <button class='btn btn-danger pull-right' ng-click="removeTodo(todo)">X</button>
+                </div><!-- end todo item -->
+
+                <!-- show only when editedTodo is true -->
+                <form ng-submit="doneEditing(todo)" ng-if='todo == editedTodo'>
+                  <input class="edit" ng-model="todo.title">
+                </form>
+
+              </div> <!-- ng-repeat -->
+            </div> <!-- list-group -->
+            <div class='btn btn-default pull-right' ng-click='clearCompletedTodos()'>Clear completed todos</div>
+        </section>
+    </section>
+    </div>
+    <script type="text/javascript" src="app.js"></script>
   </body>
 </html>
